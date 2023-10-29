@@ -1,47 +1,57 @@
-<?php
+<?php 
 
-trait Database
+namespace Model;
+
+defined('ROOTPATH') OR exit('Access Denied!');
+
+Trait Database
 {
-    private function connect()
-    {
-        $string = "mysql:hostname=" . DB_HOST . ";dbname=" . DB_NAME;
-        $con = new PDO($string, DB_USER, DB_PASSWORD);
-        //show($con);
 
-        return $con;
-    }
+	private function connect()
+	{
+		$string = "mysql:hostname=".DBHOST.";dbname=".DBNAME;
+		$con = new \PDO($string,DBUSER,DBPASS);
+		return $con;
+	}
 
-    public function query($query, $data = [])
-    {
-        $con = $this->connect();
-        $stm = $con->prepare($query);
+	public function query($query, $data = [])
+	{
 
-        $check = $stm->execute($data);
-        if ($check) {
-            $result = $stm->fetchAll(PDO::FETCH_OBJ);
+		$con = $this->connect();
+		$stm = $con->prepare($query);
 
-            if (is_array($result) && count($result)) {
-                return $result;
-            }
-        }
+		$check = $stm->execute($data);
+		if($check)
+		{
+			$result = $stm->fetchAll(\PDO::FETCH_OBJ);
+			if(is_array($result) && count($result))
+			{
+				return $result;
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    public function get_row($query, $data = [])
-    {
-        $con = $this->connect();
-        $stm = $con->prepare($query);
+	public function get_row($query, $data = [])
+	{
 
-        $check = $stm->execute($data);
-        if ($check) {
-            $result = $stm->fetchAll(PDO::FETCH_OBJ);
+		$con = $this->connect();
+		$stm = $con->prepare($query);
 
-            if (is_array($result) && count($result)) {
-                return $result[0];
-            }
-        }
+		$check = $stm->execute($data);
+		if($check)
+		{
+			$result = $stm->fetchAll(\PDO::FETCH_OBJ);
+			if(is_array($result) && count($result))
+			{
+				return $result[0];
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
+	
 }
+
+

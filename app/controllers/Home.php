@@ -1,18 +1,19 @@
 <?php
 
-class Home extends Controller
+namespace Controller;
+
+defined('ROOTPATH') or exit('Access Denied!');
+
+/**
+ * home class
+ */
+class Home
 {
-    public function index($a = '', $b = '', $c = '')
-    {
-        echo "this is index method" . "<br>";
+	use MainController;
 
-        $this->view('home');
-    }
-
-    public function edit($a = '', $b = '', $c = '')
-    {
-        echo "this is edit method" . "<br>";
-
-        $this->view('home');
-    }
+	public function index()
+	{
+		$data['title'] = 'Home';
+		$this->view('home', $data);
+	}
 }

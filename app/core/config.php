@@ -1,23 +1,29 @@
 <?php
 
-if ($_SERVER['SERVER_NAME'] == 'localhost') {
-    define('ROOT', 'http://localhost/php-mvc-01/public');
+defined('ROOTPATH') or exit('Access Denied!');
 
-    define('DB_NAME', 'my_mvc_db');
-    define('DB_HOST', 'localhost');
-    define('DB_USER', 'root');
-    define('DB_PASSWORD', '');
-    define('DB_DRIVER', '');
+if ((empty($_SERVER['SERVER_NAME']) && php_sapi_name() == 'cli') || (!empty($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] == 'localhost')) {
+	/** database config **/
+	define('DBNAME', 'mvc_db');
+	define('DBHOST', 'localhost');
+	define('DBUSER', 'root');
+	define('DBPASS', '');
+	define('DBDRIVER', '');
+
+	define('ROOT', 'http://localhost/php-mvc-02-gallery/public');
 } else {
-    define('ROOT', 'https://www.yoursite.com');
+	/** database config **/
+	define('DBNAME', 'mvc_gallery_db');
+	define('DBHOST', 'localhost');
+	define('DBUSER', 'root');
+	define('DBPASS', '');
+	define('DBDRIVER', '');
 
-    define('DB_NAME', 'my_mvc_db');
-    define('DB_HOST', 'localhost');
-    define('DB_USER', 'root');
-    define('DB_PASSWORD', '');
-    define('DB_DRIVER', '');
+	define('ROOT', 'https://www.yourwebsite.com');
 }
 
-define('APP_NAME', 'My Website');
-//if true errors will show
+define('APP_NAME', "My Gallery");
+define('APP_DESC', "Best website on the planet");
+
+/** true means show errors **/
 define('DEBUG', true);

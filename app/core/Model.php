@@ -1,155 +1,255 @@
-<?php
+<?php 
 
-trait Model
+namespace Model;
+
+defined('ROOTPATH') OR exit('Access Denied!');
+
+/**
+ * Main Model trait
+ */
+Trait Model
 {
-    //you can only extends one Class but can add many traits
-    //add trait Database to this Model
-    use Database;
+	use Database;
 
-    // test connect to DB
-    function test()
-    {
-        $query = "SELECT * FROM users";
-        $result = $this->query($query);
-        //show($result);
-    }
+	public $limit 		= 10;
+	public $offset 		= 0;
+	public $order_type 	= "desc";
+	public $order_column = "id";
+	public $errors 		= [];
 
-    protected $limit = 10;
-    protected $offset = 0;
-    protected $order_type = "desc";
-    protected $order_column = "id";
+	public function findAll()
+	{
+	 
+		$query = "select * from $this->table order by $this->order_column $this->order_type limit $this->limit offset $this->offset";
 
-    //FINDALL query
-    public function findAll()
-    {
-        //build query
-        $query = "SELECT * FROM $this->table ORDER BY $this->order_column $this->order_type LIMIT $this->limit OFFSET $this->offset";
-        //echo $query;
+		return $this->query($query);
+	}
 
-        return $this->query($query);
-    }
+	public function where($data, $data_not = [])
+	{
+		$keys = array_keys($data);
+		$keys_not = array_keys($data_not);
+		$query = "select * from $this->table where ";
 
-    //WHERE query
-    public function where($data, $data_not = [])
-    {
-        //grab all keys from array
-        $keys = array_keys($data);
-        $keys_not = array_keys($data_not);
-        $query = "SELECT * FROM $this->table WHERE ";
+		foreach ($keys as $key) {
+			$query .= $key . " = :". $key . " && ";
+		}
 
-        foreach ($keys as $key) {
-            $query .= $key . " = :" . $key . " && ";
-        }
-        foreach ($keys_not as $key) {
-            $query .= $key . " != :" . $key . " && ";
-        }
+		foreach ($keys_not as $key) {
+			$query .= $key . " != :". $key . " && ";
+		}
+		
+		$query = trim($query," && ");
 
-        //delete last symbols in string
-        $query = trim($query, " && ");
+		$query .= " order by $this->order_column $this->order_type limit $this->limit offset $this->offset";
+		$data = array_merge($data, $data_not);
 
-        //build query
-        $query .= " ORDER BY $this->order_column $this->order_type LIMIT $this->limit OFFSET $this->offset";
-        $data = array_merge($data, $data_not);
-        //echo $query;
+		return $this->query($query, $data);
+	}
 
-        return $this->query($query, $data);
-    }
+	public function first($data, $data_not = [])
+	{
+		$keys = array_keys($data);
+		$keys_not = array_keys($data_not);
+		$query = "select * from $this->table where ";
 
-    //FIRST query, get first item
-    public function first($data, $data_not = [])
-    {
-        //grab all keys from array
-        $keys = array_keys($data);
-        $keys_not = array_keys($data_not);
-        $query = "SELECT * FROM $this->table WHERE ";
+		foreach ($keys as $key) {
+			$query .= $key . " = :". $key . " && ";
+		}
 
-        foreach ($keys as $key) {
-            $query .= $key . " = :" . $key . " && ";
-        }
-        foreach ($keys_not as $key) {
-            $query .= $key . " != :" . $key . " && ";
-        }
+		foreach ($keys_not as $key) {
+			$query .= $key . " != :". $key . " && ";
+		}
+		
+		$query = trim($query," && ");
 
-        //delete last symbols in string
-        $query = trim($query, " && ");
+		$query .= " limit $this->limit offset $this->offset";
+		$data = array_merge($data, $data_not);
+		
+		$result = $this->query($query, $data);
+		if($result)
+			return $result[0];
 
-        //build query
-        $query .= " LIMIT $this->limit OFFSET $this->offset";
-        $data = array_merge($data, $data_not);
-        //echo $query;
+		return false;
+	}
 
-        $result = $this->query($query, $data);
-        if ($result) {
-            return $result[0];
-        }
+	public function insert($data)
+	{
+		
+		/** remove unwanted data **/
+		if(!empty($this->allowedColumns))
+		{
+			foreach ($data as $key => $value) {
+				
+				if(!in_array($key, $this->allowedColumns))
+				{
+					unset($data[$key]);
+				}
+			}
+		}
 
-        return false;
-    }
+		$keys = array_keys($data);
 
-    //INSERT query, add new row to db
-    public function insert($data)
-    {
-        //remove unwanted columns in data
-        if (!empty($this->allowedColumns)) {
-            foreach ($data as $key) {
-                if (!in_array($key, $this->allowedColumns)) {
-                    unset($data[$key]);
-                }
-            }
-        }
+		$query = "insert into $this->table (".implode(",", $keys).") values (:".implode(",:", $keys).")";
+		$this->query($query, $data);
 
-        //grab all keys from array
-        $keys = array_keys($data);
-        $query = "INSERT INTO $this->table (" . implode(", ", $keys) . ") VALUES (:" . implode(", :", $keys) . ")";
-        //echo $query;
+		return false;
+	}
 
-        $this->query($query, $data);
+	public function update($id, $data, $id_column = 'id')
+	{
 
-        return false;
-    }
+		/** remove unwanted data **/
+		if(!empty($this->allowedColumns))
+		{
+			foreach ($data as $key => $value) {
+				
+				if(!in_array($key, $this->allowedColumns))
+				{
+					unset($data[$key]);
+				}
+			}
+		}
 
-    //UPDATE query
-    public function update($id, $data, $id_column = 'id')
-    {
-        //remove unwanted columns in data
-        if (!empty($this->allowedColumns)) {
-            foreach ($data as $key) {
-                if (!in_array($key, $this->allowedColumns)) {
-                    unset($data[$key]);
-                }
-            }
-        }
+		$keys = array_keys($data);
+		$query = "update $this->table set ";
 
-        //grab all keys from array
-        $keys = array_keys($data);
-        $query = "UPDATE $this->table SET ";
+		foreach ($keys as $key) {
+			$query .= $key . " = :". $key . ", ";
+		}
 
-        foreach ($keys as $key) {
-            $query .= $key . " = :" . $key . ", ";
-        }
+		$query = trim($query,", ");
 
-        //delete last symbols in string
-        $query = trim($query, ", ");
+		$query .= " where $id_column = :$id_column ";
 
-        //build query
-        $query .= "  WHERE $id_column = :$id_column";
-        //echo $query;
+		$data[$id_column] = $id;
 
-        $data[$id_column] = $id;
-        $this->query($query, $data);
+		$this->query($query, $data);
+		return false;
 
-        return false;
-    }
+	}
 
-    //DELETE query
-    public function delete($id, $id_column = 'id')
-    {
-        $data[$id_column] = $id;
-        $query = "DELETE FROM $this->table WHERE $id_column = :$id_column";
-        //echo $query;
+	public function delete($id, $id_column = 'id')
+	{
 
-        $this->query($query, $data);
+		$data[$id_column] = $id;
+		$query = "delete from $this->table where $id_column = :$id_column ";
+		$this->query($query, $data);
 
-        return false;
-    }
+		return false;
+
+	}
+
+	public function getError($key)
+	{
+		if(!empty($this->errors[$key]))
+			return $this->errors[$key];
+
+		return "";
+	}
+
+	protected function getPrimaryKey(){
+
+		return $this->primaryKey ?? 'id';
+	}
+
+	public function validate($data)
+	{
+
+		$this->errors = [];
+
+		if(!empty($this->primaryKey) && !empty($data[$this->primaryKey]))
+		{
+			$validationRules = $this->onUpdateValidationRules;
+		}else{
+
+			$validationRules = $this->onInsertValidationRules;
+		}
+
+		if(!empty($validationRules))
+		{
+			foreach ($validationRules as $column => $rules) {
+				
+				if(!isset($data[$column]))
+					continue;
+
+				foreach ($rules as $rule) {
+				
+					switch ($rule) {
+						case 'required':
+
+							if(empty($data[$column]))
+								$this->errors[$column] = ucfirst($column) . " is required";
+							break;
+						case 'email':
+
+							if(!filter_var(trim($data[$column]),FILTER_VALIDATE_EMAIL))
+								$this->errors[$column] = "Invalid email address";
+							break;
+						case 'alpha':
+
+							if(!preg_match("/^[a-zA-Z]+$/", trim($data[$column])))
+								$this->errors[$column] = ucfirst($column) . " should only have aphabetical letters without spaces";
+							break;
+						case 'alpha_space':
+
+							if(!preg_match("/^[a-zA-Z ]+$/", trim($data[$column])))
+								$this->errors[$column] = ucfirst($column) . " should only have aphabetical letters & spaces";
+							break;
+						case 'alpha_numeric':
+
+							if(!preg_match("/^[a-zA-Z0-9]+$/", trim($data[$column])))
+								$this->errors[$column] = ucfirst($column) . " should only have aphabetical letters & spaces";
+							break;
+						case 'alpha_numeric_symbol':
+
+							if(!preg_match("/^[a-zA-Z0-9\-\_\$\%\*\[\]\(\)\& ]+$/", trim($data[$column])))
+								$this->errors[$column] = ucfirst($column) . " should only have aphabetical letters & spaces";
+							break;
+						case 'alpha_symbol':
+
+							if(!preg_match("/^[a-zA-Z\-\_\$\%\*\[\]\(\)\& ]+$/", trim($data[$column])))
+								$this->errors[$column] = ucfirst($column) . " should only have aphabetical letters & spaces";
+							break;
+						
+						case 'not_less_than_8_chars':
+
+							if(strlen(trim($data[$column])) < 8)
+								$this->errors[$column] = ucfirst($column) . " should not be less than 8 characters";
+							break;
+						
+						case 'unique':
+
+							$key = $this->getPrimaryKey();
+							if(!empty($data[$key]))
+							{
+								//edit mode
+								if($this->first([$column=>$data[$column]],[$key=>$data[$key]])){
+									$this->errors[$column] = ucfirst($column) . " should be unique";
+								}
+							}else{
+								//insert mode
+								if($this->first([$column=>$data[$column]])){
+									$this->errors[$column] = ucfirst($column) . " should be unique";
+								}
+							}
+							break;
+						
+						default:
+							$this->errors['rules'] = "The rule ". $rule . " was not found!";
+							break;
+					}
+				}
+			}
+		}
+
+		if(empty($this->errors))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	
 }
