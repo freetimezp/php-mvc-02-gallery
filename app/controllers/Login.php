@@ -1,8 +1,8 @@
-<?php 
+<?php
 
 namespace Controller;
 
-defined('ROOTPATH') OR exit('Access Denied!');
+defined('ROOTPATH') or exit('Access Denied!');
 
 /**
  * login class
@@ -13,15 +13,13 @@ class Login
 
 	public function index()
 	{
-
+		$data['title'] = 'Login';
 		$data['user'] = new \Model\User;
 		$req = new \Core\Request;
-		if($req->posted())
-		{
+		if ($req->posted()) {
 			$data['user']->login($_POST);
 		}
 
-		$this->view('login',$data);
+		$this->view('login', $data);
 	}
-
 }

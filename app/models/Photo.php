@@ -2,25 +2,25 @@
 
 namespace Model;
 
-defined('ROOTPATH') OR exit('Access Denied!');
+defined('ROOTPATH') or exit('Access Denied!');
 
 /**
  * Photo class
  */
 class Photo
 {
-	
+
 	use Model;
 
 	protected $table = 'photos';
 	protected $primaryKey = 'id';
-	protected $loginUniqueColumn = 'email';
+	protected $loginUniqueColumn = 'id';
 
 	protected $allowedColumns = [
-
-		'username',
-		'email',
-		'password',
+		'user_id',
+		'image',
+		'date_created',
+		'date_updated',
 	];
 
 	/*****************************
@@ -37,21 +37,10 @@ class Photo
 		alpha_symbol
 	 * 
 	 ****************************/
-	protected $validationRules = [
-
-		'email' => [
-			'email',
-			'unique',
+	protected $onInsertValidationRules = [
+		'title' => [
+			'alpha_numeric_symbol',
 			'required',
-		],
-		'username' => [
-			'alpha',
-			'required',
-		],
-		'password' => [
-			'not_less_than_8_chars',
-			'required',
-		],
+		]
 	];
-
 }

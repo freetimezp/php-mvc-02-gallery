@@ -17,11 +17,13 @@ class User
 	protected $loginUniqueColumn = 'email';
 
 	protected $allowedColumns = [
-
 		'username',
 		'email',
 		'role',
 		'password',
+		'date',
+		'date_updated',
+		'date_created',
 	];
 
 	/*****************************
@@ -90,6 +92,8 @@ class User
 			$data['date_created'] = date("Y-m-d H:i:s");
 
 			$this->insert($data);
+
+			message('Your account was created Successfully! Please login.');
 			redirect('login');
 		}
 	}

@@ -37,7 +37,7 @@ class {CLASSNAME}
 		alpha_symbol
 	 * 
 	 ****************************/
-	protected $validationRules = [
+	protected $onInsertValidationRules = [
 
 		'email' => [
 			'email',

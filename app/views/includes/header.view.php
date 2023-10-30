@@ -37,7 +37,7 @@
                     <?php if ($ses->is_logged_in()) : ?>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                User
+                                Hi, <?= $ses->user('username') ?>
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="<?= ROOT ?>/profile">Profile</a></li>
