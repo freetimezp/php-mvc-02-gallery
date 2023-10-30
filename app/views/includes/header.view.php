@@ -30,6 +30,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="<?= ROOT ?>/photos">Photos</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= ROOT ?>/upload">Upload</a>
+                    </li>
 
                     <?php if ($ses->is_logged_in()) : ?>
                         <li class="nav-item dropdown">
