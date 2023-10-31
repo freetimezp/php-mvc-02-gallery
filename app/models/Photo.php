@@ -18,6 +18,7 @@ class Photo
 
 	protected $allowedColumns = [
 		'user_id',
+		'title',
 		'image',
 		'date_created',
 		'date_updated',

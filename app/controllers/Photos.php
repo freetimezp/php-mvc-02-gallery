@@ -1,8 +1,11 @@
-<?php 
+<?php
 
 namespace Controller;
 
-defined('ROOTPATH') OR exit('Access Denied!');
+defined('ROOTPATH') or exit('Access Denied!');
+
+use \Model\Photo;
+use \Model\Image;
 
 /**
  * Photos class
@@ -13,8 +16,13 @@ class Photos
 
 	public function index()
 	{
+		$photo = new Photo;
 
-		$this->view('photos');
+		$photo->order_type = 'desc';
+		$photo->limit = 32;
+		$data['rows'] = $photo->findAll();
+		$data['image'] = new Image;
+
+		$this->view('photos', $data);
 	}
-
 }
