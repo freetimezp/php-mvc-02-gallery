@@ -6,6 +6,7 @@ defined('ROOTPATH') or exit('Access Denied!');
 
 use \Model\Photo;
 use \Model\Image;
+use \Core\Pager;
 
 /**
  * Photos class
@@ -18,10 +19,17 @@ class Photos
 	{
 		$photo = new Photo;
 
+		$limit = 24;
+		$pager = new Pager($limit);
+		$offset = $pager->offset;
+
 		$photo->order_type = 'desc';
-		$photo->limit = 32;
+		$photo->limit = $limit;
+		$photo->offset = $offset;
+
 		$data['rows'] = $photo->findAll();
 		$data['image'] = new Image;
+		$data['pager'] = $pager;
 
 		$this->view('photos', $data);
 	}

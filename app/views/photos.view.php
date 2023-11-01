@@ -19,4 +19,8 @@
 
 </div>
 
+<div>
+    <?php $pager->display(); ?>
+</div>
+
 <?php $this->view('includes/footer', $data);

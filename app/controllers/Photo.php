@@ -24,6 +24,7 @@ class Photo
 			$data['row'] = $data['row'][0];
 		}
 		$data['image'] = new Image;
+		$data['ses'] = new \Core\Session;
 
 		$this->view('photo', $data);
 	}

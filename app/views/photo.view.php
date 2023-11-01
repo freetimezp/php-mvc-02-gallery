@@ -18,9 +18,16 @@
                 </a>
             </div>
             <img src="<?= get_image($row->image); ?>" alt="photo" class="img-thumbnail d-block mx-auto p-0 shadow mb-3" style="object-fit: cover;">
-            <a href="<?= ROOT; ?>/photo/<?= $row->id; ?>">
-                Delete Image
-            </a>
+
+            <?php if ($ses->is_logged_in() && $ses->user('id') == $row->user_id) : ?>
+                <a href="<?= ROOT; ?>/upload/edit/<?= $row->id; ?>">
+                    Edit Image
+                </a>
+                <a href="<?= ROOT; ?>/upload/delete/<?= $row->id; ?>">
+                    Delete Image
+                </a>
+            <?php endif; ?>
+
         </div>
     <?php else : ?>
         <div class="my-4 p-2 text-center">
