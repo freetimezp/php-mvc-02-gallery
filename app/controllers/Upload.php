@@ -129,4 +129,37 @@ class Upload
 		$data['photo'] = $photo;
 		$this->view('upload', $data);
 	}
+
+	public function delete($id = null)
+	{
+		$data['title'] = "Delete";
+		$data['mode'] = "delete";
+
+		$req = new Request;
+		$ses = new Session;
+		$photo = new Photo;
+
+		if (!$ses->is_logged_in()) {
+			message("You need to login to delete an image..");
+			redirect('login');
+		}
+
+		$user_id = $ses->user('id');
+		$data['row'] = $row = $photo->first(['id' => $id, 'user_id' => $user_id]);
+
+		if ($req->posted() && $row) {
+			show($user_id);
+			$data = $req->post();
+			$data['id'] = $row->id;
+
+			$photo->delete($row->id);
+			if (file_exists($row->image)) {
+				unlink($row->image);
+			}
+			redirect('photos');
+		}
+
+		$data['photo'] = $photo;
+		$this->view('upload', $data);
+	}
 }
