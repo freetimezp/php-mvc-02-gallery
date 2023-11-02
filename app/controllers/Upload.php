@@ -30,12 +30,12 @@ class Upload
 		}
 
 		if ($req->posted()) {
-			$data = $req->post();
+			$post_data = $req->post();
 
-			if ($photo->validate($data)) {
-				$data['date_created'] = date("Y-m-d H:i:s");
-				$data['user_id'] = $ses->user('id');
-				$data['image'] = "";
+			if ($photo->validate($post_data)) {
+				$post_data['date_created'] = date("Y-m-d H:i:s");
+				$post_data['user_id'] = $ses->user('id');
+				$post_data['image'] = "";
 
 				$files = $req->files();
 
@@ -48,12 +48,12 @@ class Upload
 
 					$allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
 					if (in_array($files['image']['type'], $allowed)) {
-						$data['image'] = $folder . time() . '_' . $files['image']['name'];
-						move_uploaded_file($files['image']['tmp_name'], $data['image']);
+						$post_data['image'] = $folder . time() . '_' . $files['image']['name'];
+						move_uploaded_file($files['image']['tmp_name'], $post_data['image']);
 						$image = new \Model\Image;
-						$image->resize($data['image'], 1000);
+						$image->resize($post_data['image'], 1000);
 
-						$photo->insert($data);
+						$photo->insert($post_data);
 						redirect('photos');
 					} else {
 						$photo->errors['image'] = "File type not supported.";
@@ -87,11 +87,11 @@ class Upload
 		$data['row'] = $row = $photo->first(['id' => $id, 'user_id' => $user_id]);
 
 		if ($req->posted() && $row) {
-			$data = $req->post();
-			$data['id'] = $row->id;
+			$post_data = $req->post();
+			$post_data['id'] = $row->id;
 
-			if ($photo->validate($data)) {
-				$data['date_updated'] = date("Y-m-d H:i:s");
+			if ($photo->validate($post_data)) {
+				$post_data['date_updated'] = date("Y-m-d H:i:s");
 
 				$files = $req->files();
 
@@ -105,10 +105,10 @@ class Upload
 
 				if (!empty($files['image']['name'])) {
 					if (in_array($files['image']['type'], $allowed)) {
-						$data['image'] = $folder . time() . '_' . $files['image']['name'];
-						move_uploaded_file($files['image']['tmp_name'], $data['image']);
+						$post_data['image'] = $folder . time() . '_' . $files['image']['name'];
+						move_uploaded_file($files['image']['tmp_name'], $post_data['image']);
 						$image = new \Model\Image;
-						$image->resize($data['image'], 1000);
+						$image->resize($post_data['image'], 1000);
 
 						if (file_exists($row->image)) {
 							unlink($row->image);
@@ -119,7 +119,7 @@ class Upload
 				}
 
 				if (empty($photo->errors)) {
-					$photo->update($row->id, $data);
+					$photo->update($row->id, $post_data);
 					redirect('photos');
 				}
 			}

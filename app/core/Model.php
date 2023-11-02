@@ -196,12 +196,12 @@ trait Model
 							break;
 						case 'alpha_numeric_symbol':
 
-							if (!preg_match("/^[a-zA-Z0-9\-\_\$\%\*\[\]\(\)\& ]+$/", trim($data[$column])))
+							if (!preg_match("/^[a-zA-Z0-9\-\_\$\%\*\[\]\(\)\&\!\.\, ]+$/", trim($data[$column])))
 								$this->errors[$column] = ucfirst($column) . " should only have aphabetical letters & spaces";
 							break;
 						case 'alpha_symbol':
 
-							if (!preg_match("/^[a-zA-Z\-\_\$\%\*\[\]\(\)\& ]+$/", trim($data[$column])))
+							if (!preg_match("/^[a-zA-Z\-\_\$\%\*\[\]\(\)\&\!\.\, ]+$/", trim($data[$column])))
 								$this->errors[$column] = ucfirst($column) . " should only have aphabetical letters & spaces";
 							break;
 
