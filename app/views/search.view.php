@@ -1,8 +1,12 @@
 <?php $this->view('includes/header', $data); ?>
 
 <div class="p-4">
-    <h3>Gallery (Photos)</h3>
+    <h3>Search (Photos)</h3>
 </div>
+
+<h3 class="text-center">
+    Searching for: <?= !empty($_GET['find']) ? $_GET['find'] : 'empty string'; ?>
+</h3>
 
 <div class="row my-3 p-4 justify-content-center">
 
