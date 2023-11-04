@@ -22,6 +22,7 @@ class Photo
 		$data['row'] = $photo->query($query, ['id' => $id]);
 		if ($data['row']) {
 			$data['row'] = $data['row'][0];
+			$data['title'] = ucfirst($data['row']->title);
 		}
 		$data['image'] = new Image;
 		$data['ses'] = new \Core\Session;

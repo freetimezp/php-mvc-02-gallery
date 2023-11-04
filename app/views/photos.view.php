@@ -22,4 +22,40 @@
     <?php $pager->display(); ?>
 </div>
 
-<?php $this->view('includes/footer', $data);
+<?php $this->view('includes/footer', $data); ?>
+
+<script>
+    var post = {
+        posting: false,
+        like: function(post_id) {
+            //alert(post_id);
+            let obj = {
+                post_id: post_id,
+                data_type: 'like',
+            };
+
+            post.send_data(obj);
+        },
+        send_data: function(obj) {
+            if (post.posting) return;
+            let xhr = new XMLHttpRequest();
+
+            post.posting = true;
+
+            xhr.addEventListener('readystatechange', function() {
+                if (xhr.readyState == 4) {
+                    post.posting = false;
+                    //alert(xhr.responseText);
+                }
+            });
+
+            let myform = new FormData();
+            for (key in obj) {
+                myform.append(key, obj[key]);
+            }
+
+            xhr.open('post', '<?= ROOT; ?>/ajax');
+            xhr.send(myform);
+        },
+    };
+</script>
