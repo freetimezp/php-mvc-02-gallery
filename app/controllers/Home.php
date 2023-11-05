@@ -5,6 +5,7 @@ namespace Controller;
 defined('ROOTPATH') or exit('Access Denied!');
 
 use \Model\Photo;
+use \Model\Like;
 use \Model\Image;
 
 /**
@@ -23,6 +24,7 @@ class Home
 		$photo->limit = 20;
 		$data['rows'] = $photo->findAll();
 		$data['image'] = new Image;
+		$data['like'] = new Like;
 
 		$this->view('home', $data);
 	}

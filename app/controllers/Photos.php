@@ -6,6 +6,7 @@ defined('ROOTPATH') or exit('Access Denied!');
 
 use \Model\Photo;
 use \Model\Image;
+use \Model\Like;
 use \Core\Pager;
 
 /**
@@ -29,6 +30,7 @@ class Photos
 
 		$data['rows'] = $photo->findAll();
 		$data['image'] = new Image;
+		$data['like'] = new Like;
 		$data['pager'] = $pager;
 
 		$this->view('photos', $data);
