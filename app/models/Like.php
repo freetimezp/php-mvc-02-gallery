@@ -30,4 +30,12 @@ class Like
 
 		return false;
 	}
+
+	public function getLikes(int $post_id)
+	{
+		$query = "SELECT count(id) as total FROM likes WHERE post_id = :post_id AND disabled = 0";
+		$row = $this->query($query, ['post_id' => $post_id]);
+
+		return $row[0]->total;
+	}
 }

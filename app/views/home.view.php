@@ -19,4 +19,9 @@
     <?php endif; ?>
 </div>
 
-<?php $this->view('includes/footer', $data);
+<?php $this->view('includes/footer', $data); ?>
+
+<script>
+    var root = '<?= ROOT; ?>';
+</script>
+<script src="<?= ROOT; ?>/assets/js/main.js"></script>

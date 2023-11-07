@@ -51,6 +51,8 @@ class Ajax
 
                     $info['liked'] = true;
                 }
+
+                $info['likes'] = $like->getLikes($post_data['post_id']);
             }
         }
 
