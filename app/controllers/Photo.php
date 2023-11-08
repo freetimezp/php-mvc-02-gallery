@@ -17,6 +17,10 @@ class Photo
 	{
 		$photo = new \Model\Photo;
 
+		$limit = 10;
+		$data['pager'] = new \Core\Pager($limit);
+		$offset = $data['pager']->offset;
+
 		$query = " SELECT photos.*, users.username
 			FROM photos JOIN users ON users.id = photos.user_id WHERE photos.id = :id LIMIT 1";
 		$data['row'] = $photo->query($query, ['id' => $id]);
