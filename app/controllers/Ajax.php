@@ -21,16 +21,18 @@ class Ajax
         $req = new Request;
         $like = new Like;
 
-        $info = [];
-
-        if (!$ses->is_logged_in()) {
-            echo ("You need login to like image..");
-            die;
-        }
+        $info['error'] = '';
 
         if ($req->posted()) {
             $post_data = $req->post();
             $info['data_type'] = $post_data['data_type'];
+
+            if (!$ses->is_logged_in()) {
+                $info['error'] = ("You need login to like image..");
+                echo json_encode($info);
+                die;
+            }
+
             $post_data['user_id'] = $ses->user('id');
             //show($post_data);
 

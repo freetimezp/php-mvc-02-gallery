@@ -40,6 +40,11 @@ var post = {
         //alert(result);
         let obj = JSON.parse(result);
         if (obj.data_type == 'like') {
+            if (obj.error != '') {
+                alert(obj.error);
+                return;
+            }
+
             let svg = post.liked_element.querySelector('svg');
             //console.log(svg);
             let color = obj.liked ? '#fd0dd8' : '#0d6efd';
