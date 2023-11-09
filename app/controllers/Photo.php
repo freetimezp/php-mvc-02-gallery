@@ -22,9 +22,8 @@ class Photo
 
 		$query = " SELECT photos.*, users.username
 			FROM photos JOIN users ON users.id = photos.user_id WHERE photos.id = :id LIMIT 1";
-		$data['row'] = $row = $photo->query($query, ['id' => $id]);
+		$data['row'] = $row = $photo->get_row($query, ['id' => $id]);
 		if ($data['row']) {
-			$data['row'] = $row = $data['row'][0];
 			$data['title'] = ucfirst($data['row']->title);
 		}
 
@@ -53,6 +52,7 @@ class Photo
 		$comment->limit = $limit;
 		$comment->offset = $offset;
 		$data['comments'] = $comment->where(['post_id' => $id]);
+		$data['comments'] = $comment->getUserDetails($data['comments']);
 		$data['image'] = new Image;
 
 		$this->view('photo', $data);

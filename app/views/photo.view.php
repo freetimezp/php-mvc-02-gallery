@@ -42,9 +42,9 @@
                         <?php foreach ($comments as $com_row) : ?>
                             <div class="row single-comment border-bottom my-1 mb-2 py-1">
                                 <div class="col-sm-2 text-center">
-                                    <img src="<?= get_image(''); ?>" class="img-thumbnail rounded-circle" style="width: 100%; max-width: 100px;">
+                                    <img src="<?= get_image($com_row->user_row->image ?? ''); ?>" class="img-thumbnail rounded-circle" style="width: 100%; max-width: 100px;">
                                     <div>
-                                        <?= $com_row->user_id; ?>
+                                        <?= ucfirst($com_row->user_row->username) ?? 'Unknown User'; ?>
                                     </div>
                                 </div>
                                 <div class="col-sm-10">
@@ -54,6 +54,15 @@
                                     <div>
                                         <?= esc($com_row->comment); ?>
                                     </div>
+
+                                    <?php if ($ses->is_logged_in() && $ses->user('id') == $com_row->user_row->id) : ?>
+                                        <a href="<?= ROOT; ?>/photo/edit/<?= $com_row->id; ?>">
+                                            Edit
+                                        </a> |
+                                        <a href="<?= ROOT; ?>/photo/delete/<?= $com_row->id; ?>">
+                                            Delete
+                                        </a>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         <?php endforeach; ?>

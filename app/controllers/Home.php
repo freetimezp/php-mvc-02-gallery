@@ -6,6 +6,7 @@ defined('ROOTPATH') or exit('Access Denied!');
 
 use \Model\Photo;
 use \Model\Like;
+use \Model\Comment;
 use \Model\Image;
 
 /**
@@ -25,6 +26,7 @@ class Home
 		$data['rows'] = $photo->findAll();
 		$data['image'] = new Image;
 		$data['like'] = new Like;
+		$data['comment'] = new Comment;
 
 		$this->view('home', $data);
 	}

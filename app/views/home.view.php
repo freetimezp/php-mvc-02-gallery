@@ -10,7 +10,10 @@
 
     <?php if (!empty($rows)) : ?>
         <?php foreach ($rows as $row) : ?>
-            <?php $this->view('includes/photo-card', ['row' => $row, 'image' => $image, 'like' => $like]); ?>
+            <?php $this->view(
+                'includes/photo-card',
+                ['row' => $row, 'image' => $image, 'like' => $like, 'comment' => $comment]
+            ); ?>
         <?php endforeach; ?>
     <?php else : ?>
         <div class="my-4 p-2 text-center">

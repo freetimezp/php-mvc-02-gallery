@@ -15,6 +15,11 @@
     if ($likes == 0) {
         $likes = '';
     }
+
+    $comments = $comment->getComments($row->id);
+    if ($comments == 0) {
+        $comments = '';
+    }
     ?>
     <div onclick="post.like('<?= $row->id; ?>', this)" style="position: absolute; right: 31px; cursor: pointer;" class="p-2 bg-white heart">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="<?= $heart_color; ?>">
@@ -22,6 +27,15 @@
         </svg>
         <span class="js-likes-count">
             <?= $likes; ?>
+        </span>
+    </div>
+
+    <div onclick="window.location = '<?= ROOT ?>/photo/<?= $row->id ?>'" style="position: absolute; left: 31px; cursor: pointer;" class="p-2 bg-white heart">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="#0d6efd">
+            <path d="M24 10.162c0-5.06-5.373-9.162-12-9.162s-12 4.102-12 9.162c0 5.097 5.447 9.213 12.121 9.161-.391 2.015-2.765 3.275-4.545 3.677 10.109-.89 16.424-6.489 16.424-12.838z" />
+        </svg>
+        <span class="js-likes-count">
+            <?= $comments; ?>
         </span>
     </div>
 
