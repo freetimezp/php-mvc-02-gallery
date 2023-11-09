@@ -34,67 +34,32 @@
             <div class="my-3 border mx-auto row bg-light" style="max-width: 1000px;">
                 <h5 class="py-1 d-block">Comments</h5>
                 <form method="post">
-                    <textarea class="form-control my-2" rows="3" placeholder="Write a comment.."></textarea>
+                    <textarea name="comment" class="form-control my-2" rows="3" placeholder="Write a comment.." required></textarea>
                     <button class="btn btn-primary my-3">Comment</button>
                 </form>
                 <div class="my-3 js-comments">
-                    <div class="row single-comment border-bottom my-1 mb-2 py-1">
-                        <div class="col-sm-2 text-center">
-                            <img src="<?= get_image(''); ?>" class="img-thumbnail rounded-circle" style="width: 100%; max-width: 150px;">
-                            <div>
-                                Username
+                    <?php if (!empty($comments)) : ?>
+                        <?php foreach ($comments as $com_row) : ?>
+                            <div class="row single-comment border-bottom my-1 mb-2 py-1">
+                                <div class="col-sm-2 text-center">
+                                    <img src="<?= get_image(''); ?>" class="img-thumbnail rounded-circle" style="width: 100%; max-width: 100px;">
+                                    <div>
+                                        <?= $com_row->user_id; ?>
+                                    </div>
+                                </div>
+                                <div class="col-sm-10">
+                                    <div class="text-muted mb-2">
+                                        <?= get_date($com_row->date_created); ?>
+                                    </div>
+                                    <div>
+                                        <?= esc($com_row->comment); ?>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-10">
-                            <div class="text-muted mb-2">
-                                12th Nov, 2023
-                            </div>
-                            <div>
-                                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                                Aliquam quisquam perferendis doloremque fugit fugiat repellat
-                                distinctio illum tempore dolorum eligendi, ratione veritatis
-                                vitae! Praesentium, ex.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row single-comment border-bottom my-1 mb-2 py-1">
-                        <div class="col-sm-2 text-center">
-                            <img src="<?= get_image(''); ?>" class="img-thumbnail rounded-circle" style="width: 100%; max-width: 150px;">
-                            <div>
-                                Username
-                            </div>
-                        </div>
-                        <div class="col-sm-10">
-                            <div class="text-muted mb-2">
-                                12th Nov, 2023
-                            </div>
-                            <div>
-                                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                                Aliquam quisquam perferendis doloremque fugit fugiat repellat
-                                distinctio illum tempore dolorum eligendi, ratione veritatis
-                                vitae! Praesentium, ex.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row single-comment border-bottom my-1 mb-2 py-1">
-                        <div class="col-sm-2 text-center">
-                            <img src="<?= get_image(''); ?>" class="img-thumbnail rounded-circle" style="width: 100%; max-width: 150px;">
-                            <div>
-                                Username
-                            </div>
-                        </div>
-                        <div class="col-sm-10">
-                            <div class="text-muted mb-2">
-                                12th Nov, 2023
-                            </div>
-                            <div>
-                                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                                Aliquam quisquam perferendis doloremque fugit fugiat repellat
-                                distinctio illum tempore dolorum eligendi, ratione veritatis
-                                vitae! Praesentium, ex.
-                            </div>
-                        </div>
-                    </div>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <div class="alert alert-warning text-center">No comments found</div>
+                    <?php endif; ?>
                 </div>
 
                 <?= $pager->display(); ?>
