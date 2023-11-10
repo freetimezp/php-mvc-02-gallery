@@ -34,10 +34,20 @@ class Photo
 			//show($post_data);
 
 			if ($comment->validate($post_data)) {
-				$post_data['user_id'] = user('id');
-				$post_data['post_id'] = $id;
-				$post_data['date_created'] = date("Y-m-d H:i:s");
-				$comment->insert($post_data);
+				//check if this is an edit comment
+				if (!empty($post_data['comment_id'])) {
+					$comment_row = $comment->first(['id' => $post_data['comment_id'], 'user_id' => user('id')]);
+					if ($comment_row) {
+						$post_data['date_updated'] = date("Y-m-d H:i:s");
+						$comment->update($comment_row->id, $post_data);
+					}
+				} else {
+					//add new comment
+					$post_data['user_id'] = user('id');
+					$post_data['post_id'] = $id;
+					$post_data['date_created'] = date("Y-m-d H:i:s");
+					$comment->insert($post_data);
+				}
 
 				redirect('photo/' . $id);
 			}
@@ -54,6 +64,7 @@ class Photo
 		$data['comments'] = $comment->where(['post_id' => $id]);
 		$data['comments'] = $comment->getUserDetails($data['comments']);
 		$data['image'] = new Image;
+		$data['id'] = $id;
 
 		$this->view('photo', $data);
 	}

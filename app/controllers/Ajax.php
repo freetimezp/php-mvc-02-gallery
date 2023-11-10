@@ -7,6 +7,7 @@ defined('ROOTPATH') or exit('Access Denied!');
 use \Core\Request;
 use \Core\Session;
 use \Model\Like;
+use \Model\Comment;
 
 /**
  * ajax class
@@ -20,6 +21,7 @@ class Ajax
         $ses = new Session;
         $req = new Request;
         $like = new Like;
+        $comment = new Comment;
 
         $info['error'] = '';
 
@@ -55,6 +57,11 @@ class Ajax
                 }
 
                 $info['likes'] = $like->getLikes($post_data['post_id']);
+            } else if ($post_data['data_type'] == 'delete-comment') {
+                $row = $comment->first(['id' => $post_data['comment_id'], 'user_id' => user('id')]);
+                if ($row) {
+                    $comment->delete($row->id);
+                }
             }
         }
 
